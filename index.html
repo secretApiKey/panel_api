@@ -290,6 +290,17 @@ color:var(--muted);
 text-align:center;
 }
 .footer a{color:var(--accent);}
+.login-error{
+display:none;
+margin-top:14px;
+padding:12px 14px;
+border-radius:14px;
+border:1px solid rgba(255,107,107,.34);
+background:rgba(255,107,107,.12);
+color:rgba(255,255,255,.92);
+font-size:13px;
+line-height:1.5;
+}
 
 .dashboard{
 display:none;
@@ -698,8 +709,8 @@ padding-right:8px;
           <span class="pulse-dot"></span>
           Secure Infrastructure Layer
         </div>
-        <h1 class="hero-title">Operate your panel with the same sleek UI feel as Mindfreak.</h1>
-        <p class="hero-copy">This layout borrows the target project's glassmorphism direction: dark ambient background, frosted panels, strong typography, and a more premium admin dashboard flow.</p>
+        <h1 class="hero-title">Run operations from a polished control center built for daily admin work.</h1>
+        <p class="hero-copy">Monitor users, infrastructure, and system activity from a refined interface designed for clarity, speed, and reliable decision-making.</p>
         <div class="hero-grid">
           <div class="hero-stat">
             <strong>125</strong>
@@ -718,9 +729,9 @@ padding-right:8px;
       <div class="hero-footer">
         <div class="pulse">
           <span class="pulse-dot"></span>
-          All systems responding normally
+          Platform services operating normally
         </div>
-        <span class="footer-link">v2026 control surface</span>
+        <span class="footer-link">Secure operations workspace</span>
       </div>
     </section>
 
@@ -729,23 +740,24 @@ padding-right:8px;
         <div class="login-badge">VP</div>
         <div>
           <div class="login-title">Viper Panel</div>
-          <div class="login-subtitle">Sign in to continue into your upgraded control dashboard.</div>
+          <div class="login-subtitle">Sign in to access account management, server monitoring, and platform settings.</div>
         </div>
       </div>
       <form id="login-form">
         <div class="input-group">
           <label for="username">Username</label>
-          <input type="text" id="username" placeholder="Enter your username" required>
+          <input type="text" id="username" placeholder="Enter your username" value="admin" required>
         </div>
         <div class="input-group">
           <label for="password">Password</label>
-          <input type="password" id="password" placeholder="Enter your password" required>
+          <input type="password" id="password" placeholder="Enter your password" value="admin" required>
           <span class="toggle-password" onclick="togglePassword()">Show</span>
         </div>
         <button type="submit" id="login-btn" class="btn btn-primary btn-full">Enter Dashboard</button>
         <div class="loader" id="loader"></div>
+        <div class="login-error" id="login-error">Invalid credentials. Use `admin` as both username and password.</div>
       </form>
-      <div class="footer">Forgot password? <a href="#">Reset access</a></div>
+      <div class="footer">Need help signing in? <a href="#">Recover your access</a></div>
     </section>
   </div>
 </div>
@@ -760,14 +772,14 @@ padding-right:8px;
         <div class="brand-badge">VP</div>
         <div>
           <div class="brand-title">Viper Panel</div>
-          <div class="brand-subtitle">Professional admin control surface</div>
+          <div class="brand-subtitle">Operations and infrastructure management</div>
         </div>
       </div>
     </div>
     <div class="topbar-right">
       <div class="live-pill">
         <span class="pulse-dot"></span>
-        <span>Live Status</span>
+        <span>System Status</span>
       </div>
       <div class="avatar-pill">
         <div class="avatar-circle" id="avatarLetter">V</div>
@@ -782,8 +794,8 @@ padding-right:8px;
         <div class="sidebar-brand">
           <div class="shield"><ion-icon name="shield-checkmark-outline"></ion-icon></div>
           <div>
-            <div class="sidebar-title">Control Hub</div>
-            <div class="sidebar-meta">Live orchestration panel</div>
+            <div class="sidebar-title">Operations Center</div>
+            <div class="sidebar-meta">Administration and service oversight</div>
           </div>
         </div>
         <button class="icon-btn" id="closeBtn" type="button" onclick="closeSidebar()" aria-label="Close navigation">
@@ -792,7 +804,7 @@ padding-right:8px;
       </div>
 
       <nav class="nav" aria-label="Dashboard sections">
-        <div class="nav-label">Workspace</div>
+        <div class="nav-label">Navigation</div>
         <a href="#" class="nav-item active" onclick="showTab(event,'dashboard-tab')">
           <span class="nav-ico"><ion-icon name="grid-outline"></ion-icon></span>
           <span>Dashboard</span>
@@ -812,7 +824,7 @@ padding-right:8px;
       </nav>
 
       <div class="sidebar-foot">
-        <p>Use the upgraded drawer-style navigation and glass cards to match the `paid.mindfreak.online` visual tone.</p>
+        <p>Access the core areas of the platform from one focused workspace for administration, monitoring, and configuration.</p>
         <button type="button" class="btn btn-danger btn-full" onclick="logout()">
           <ion-icon name="log-out-outline"></ion-icon>
           Logout
@@ -826,8 +838,8 @@ padding-right:8px;
       <section id="dashboard-tab" class="tab active">
         <div class="page-header">
           <div>
-            <h1 class="page-title">Dashboard Overview</h1>
-            <p class="page-copy">Welcome back, <span id="user-display">Operator</span>. Here is your command surface with the darker premium look from the target assets.</p>
+            <h1 class="page-title">Operational Overview</h1>
+            <p class="page-copy">Welcome back, <span id="user-display">Operator</span>. Review current account volume, infrastructure status, and usage trends from a single overview.</p>
           </div>
         </div>
 
@@ -835,25 +847,25 @@ padding-right:8px;
           <div class="card">
             <div class="card-title">Users</div>
             <div class="card-value">125</div>
-            <div class="card-sub">Total managed accounts across the panel</div>
+            <div class="card-sub">Total accounts currently managed in the platform</div>
           </div>
           <div class="card">
             <div class="card-title">Servers</div>
             <div class="card-value">8</div>
-            <div class="card-sub">Connected infrastructure nodes</div>
+            <div class="card-sub">Infrastructure nodes connected to this workspace</div>
           </div>
           <div class="card">
             <div class="card-title">Connections</div>
             <div class="card-value">57</div>
-            <div class="card-sub">Live sessions currently active</div>
+            <div class="card-sub">Authenticated sessions active at this time</div>
           </div>
         </div>
 
         <div class="card card-wide">
           <div class="table-head">
             <div>
-              <div class="card-title">Activity Trend</div>
-              <div class="card-sub">Active users over the last seven months</div>
+              <div class="card-title">Usage Trend</div>
+              <div class="card-sub">Monthly active account activity across the last seven reporting periods</div>
             </div>
           </div>
           <canvas id="dashboardChart" style="margin-top:14px;max-height:340px;"></canvas>
@@ -863,11 +875,11 @@ padding-right:8px;
       <section id="users-tab" class="tab">
         <div class="page-header">
           <div>
-            <h1 class="page-title">Users Management</h1>
-            <p class="page-copy">Monitor account activity with a more polished table treatment inspired by the target panel.</p>
+            <h1 class="page-title">User Administration</h1>
+            <p class="page-copy">Review account records, contact details, and current access states for your managed users.</p>
           </div>
           <div class="search">
-            <input type="text" placeholder="Search users">
+            <input type="text" placeholder="Search by username or email">
           </div>
         </div>
 
@@ -888,8 +900,8 @@ padding-right:8px;
       <section id="servers-tab" class="tab">
         <div class="page-header">
           <div>
-            <h1 class="page-title">Servers Management</h1>
-            <p class="page-copy">Server inventory now follows the same dark-glass cards, badge states, and clean spacing pattern.</p>
+            <h1 class="page-title">Server Administration</h1>
+            <p class="page-copy">Track infrastructure endpoints, review connection details, and monitor operational status for each server.</p>
           </div>
         </div>
 
@@ -910,8 +922,8 @@ padding-right:8px;
       <section id="settings-tab" class="tab">
         <div class="page-header">
           <div>
-            <h1 class="page-title">Settings</h1>
-            <p class="page-copy">Configuration fields were restyled to match the target panel's rounded controls and layered glass panels.</p>
+            <h1 class="page-title">Platform Settings</h1>
+            <p class="page-copy">Manage the platform identity, interface preferences, and notification behavior from one settings area.</p>
           </div>
         </div>
 
@@ -920,7 +932,7 @@ padding-right:8px;
             <div class="field">
               <label for="panel-name">Panel Name</label>
               <input id="panel-name" type="text" value="Viper Panel">
-              <small>Displayed across the header and login screen.</small>
+              <small>Used throughout the interface, including the header and sign-in screen.</small>
             </div>
             <div class="field">
               <label for="theme-select">Theme</label>
@@ -928,7 +940,7 @@ padding-right:8px;
                 <option>Dark Glass</option>
                 <option>Light Glass</option>
               </select>
-              <small>Matches the styling direction from the reference assets.</small>
+              <small>Select the interface appearance used across the dashboard.</small>
             </div>
             <div class="field span-2">
               <label for="notice-select">Notifications</label>
@@ -936,11 +948,11 @@ padding-right:8px;
                 <option>Enabled</option>
                 <option>Disabled</option>
               </select>
-              <small>Control live alerts, warning banners, and admin notices.</small>
+              <small>Define how operational alerts and platform notices are surfaced.</small>
             </div>
           </div>
           <div style="margin-top:14px;">
-            <button class="btn btn-primary" type="button">Save Changes</button>
+            <button class="btn btn-primary" type="button">Save Settings</button>
           </div>
         </div>
       </section>
@@ -967,10 +979,24 @@ function togglePassword(){
 
 document.getElementById("login-form").addEventListener("submit",function(e){
   e.preventDefault();
+  const usernameInput=document.getElementById("username");
+  const passwordInput=document.getElementById("password");
+  const errorBox=document.getElementById("login-error");
+  const username=usernameInput.value.trim();
+  const password=passwordInput.value;
+
+  errorBox.style.display="none";
+
+  if(username!=="admin" || password!=="admin"){
+    document.getElementById("loader").style.display="none";
+    document.getElementById("login-btn").disabled=false;
+    errorBox.style.display="block";
+    return;
+  }
+
   document.getElementById("login-btn").disabled=true;
   document.getElementById("loader").style.display="block";
   setTimeout(()=>{
-    const username=document.getElementById("username").value.trim() || "Operator";
     document.getElementById("user-display").textContent=username;
     document.getElementById("topUsername").textContent=username;
     document.getElementById("avatarLetter").textContent=username.charAt(0).toUpperCase();
@@ -985,6 +1011,7 @@ function logout(){
   document.getElementById("login-container").style.display="flex";
   document.getElementById("login-btn").disabled=false;
   document.getElementById("loader").style.display="none";
+  document.getElementById("login-error").style.display="none";
   closeSidebar();
 }
 
