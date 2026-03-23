@@ -10,6 +10,8 @@
 <style>
 :root{
 --bg:#0b1220;
+--bg-overlay-1:rgba(99,179,255,.20);
+--bg-overlay-2:rgba(61,220,151,.12);
 --panel:rgba(255,255,255,.06);
 --panel-strong:rgba(255,255,255,.09);
 --text:rgba(255,255,255,.92);
@@ -21,6 +23,16 @@
 --accent:#63b3ff;
 --accent-soft:rgba(99,179,255,.18);
 --accent-line:rgba(99,179,255,.35);
+--input-bg:rgba(0,0,0,.18);
+--input-bg-focus:rgba(0,0,0,.22);
+--topbar-bg-start:rgba(0,0,0,.25);
+--topbar-bg-end:rgba(0,0,0,.05);
+--sidebar-bg-start:rgba(0,0,0,.18);
+--sidebar-bg-end:rgba(0,0,0,.06);
+--table-row-hover:rgba(255,255,255,.04);
+--chart-text:rgba(255,255,255,.82);
+--chart-muted:rgba(255,255,255,.58);
+--chart-grid:rgba(255,255,255,.08);
 --ok:#3ddc97;
 --warn:#ffd166;
 --danger:#ff6b6b;
@@ -28,16 +40,42 @@
 --sidebar-w:320px;
 }
 
+body[data-theme="light"]{
+--bg:#eef3fb;
+--bg-overlay-1:rgba(99,179,255,.22);
+--bg-overlay-2:rgba(61,220,151,.10);
+--panel:rgba(255,255,255,.78);
+--panel-strong:rgba(255,255,255,.92);
+--text:#122033;
+--muted:rgba(18,32,51,.66);
+--line:rgba(18,32,51,.12);
+--shadow:0 18px 55px rgba(37,61,89,.12);
+--accent:#2563eb;
+--accent-soft:rgba(37,99,235,.12);
+--accent-line:rgba(37,99,235,.26);
+--input-bg:rgba(255,255,255,.75);
+--input-bg-focus:#ffffff;
+--topbar-bg-start:rgba(255,255,255,.88);
+--topbar-bg-end:rgba(255,255,255,.68);
+--sidebar-bg-start:rgba(255,255,255,.90);
+--sidebar-bg-end:rgba(255,255,255,.74);
+--table-row-hover:rgba(37,99,235,.06);
+--chart-text:rgba(18,32,51,.86);
+--chart-muted:rgba(18,32,51,.62);
+--chart-grid:rgba(18,32,51,.10);
+}
+
 *{box-sizing:border-box;margin:0;padding:0;}
 html,body{height:100%;}
 body{
 font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
 background:
-radial-gradient(1200px 700px at 20% 10%, rgba(99,179,255,.20), transparent 55%),
-radial-gradient(900px 500px at 80% 0%, rgba(61,220,151,.12), transparent 60%),
+radial-gradient(1200px 700px at 20% 10%, var(--bg-overlay-1), transparent 55%),
+radial-gradient(900px 500px at 80% 0%, var(--bg-overlay-2), transparent 60%),
 var(--bg);
 color:var(--text);
 overflow-x:hidden;
+transition:background .25s ease,color .25s ease;
 }
 a{color:inherit;text-decoration:none;}
 button,input,select{font:inherit;}
@@ -218,14 +256,14 @@ height:52px;
 padding:0 16px;
 border-radius:16px;
 border:1px solid var(--line);
-background:rgba(0,0,0,.18);
+background:var(--input-bg);
 color:var(--text);
 transition:border-color .15s ease, box-shadow .15s ease, background .15s ease;
 }
 input:focus,select:focus{
 border-color:rgba(99,179,255,.55);
 box-shadow:0 0 0 4px rgba(99,179,255,.16);
-background:rgba(0,0,0,.22);
+background:var(--input-bg-focus);
 outline:none;
 }
 .toggle-password{
@@ -318,7 +356,7 @@ justify-content:space-between;
 gap:12px;
 padding:10px 16px;
 border-bottom:1px solid var(--line);
-background:linear-gradient(to bottom, rgba(0,0,0,.25), rgba(0,0,0,.05));
+background:linear-gradient(to bottom, var(--topbar-bg-start), var(--topbar-bg-end));
 backdrop-filter:blur(10px);
 }
 .topbar-left,.topbar-right{
@@ -408,7 +446,7 @@ display:flex;
 flex-direction:column;
 gap:12px;
 border-right:1px solid var(--line);
-background:linear-gradient(to bottom, rgba(0,0,0,.18), rgba(0,0,0,.06));
+background:linear-gradient(to bottom, var(--sidebar-bg-start), var(--sidebar-bg-end));
 backdrop-filter:blur(12px);
 box-shadow:var(--shadow);
 transform:translateX(-110%);
@@ -598,7 +636,7 @@ text-transform:uppercase;
 color:var(--muted);
 }
 .table tr:hover td{
-background:rgba(255,255,255,.04);
+background:var(--table-row-hover);
 }
 .badge{
 display:inline-flex;
@@ -638,6 +676,17 @@ grid-column:span 2;
 .field small{
 color:var(--muted);
 font-size:12px;
+}
+.settings-actions{
+margin-top:14px;
+display:flex;
+align-items:center;
+gap:12px;
+flex-wrap:wrap;
+}
+.settings-status{
+font-size:13px;
+color:var(--muted);
 }
 .brand-footer{
 margin-top:18px;
@@ -937,8 +986,8 @@ padding-right:8px;
             <div class="field">
               <label for="theme-select">Theme</label>
               <select id="theme-select">
-                <option>Dark Glass</option>
-                <option>Light Glass</option>
+                <option value="dark">Dark Glass</option>
+                <option value="light">Light Glass</option>
               </select>
               <small>Select the interface appearance used across the dashboard.</small>
             </div>
@@ -951,8 +1000,9 @@ padding-right:8px;
               <small>Define how operational alerts and platform notices are surfaced.</small>
             </div>
           </div>
-          <div style="margin-top:14px;">
-            <button class="btn btn-primary" type="button">Save Settings</button>
+          <div class="settings-actions">
+            <button class="btn btn-primary" id="save-settings-btn" type="button">Save Settings</button>
+            <span class="settings-status" id="settings-status" aria-live="polite"></span>
           </div>
         </div>
       </section>
@@ -964,6 +1014,64 @@ padding-right:8px;
 
 <script>
 let dashboardChart;
+const STORAGE_KEYS={
+  theme:"viper-panel-theme"
+};
+
+function getThemeColors(){
+  const styles=getComputedStyle(document.body);
+  return {
+    text:styles.getPropertyValue("--chart-text").trim(),
+    muted:styles.getPropertyValue("--chart-muted").trim(),
+    grid:styles.getPropertyValue("--chart-grid").trim(),
+    accent:styles.getPropertyValue("--accent").trim(),
+    accentSoft:styles.getPropertyValue("--accent-soft").trim()
+  };
+}
+
+function updateChartTheme(){
+  if(!dashboardChart){return;}
+  const colors=getThemeColors();
+  dashboardChart.data.datasets[0].borderColor=colors.accent;
+  dashboardChart.data.datasets[0].backgroundColor=colors.accentSoft;
+  dashboardChart.data.datasets[0].pointBackgroundColor=colors.accent;
+  dashboardChart.options.plugins.legend.labels.color=colors.text;
+  dashboardChart.options.scales.x.ticks.color=colors.muted;
+  dashboardChart.options.scales.x.grid.color=colors.grid;
+  dashboardChart.options.scales.y.ticks.color=colors.muted;
+  dashboardChart.options.scales.y.grid.color=colors.grid;
+  dashboardChart.update();
+}
+
+function applyTheme(theme){
+  const nextTheme=theme==="light" ? "light" : "dark";
+  document.body.setAttribute("data-theme",nextTheme);
+  const themeSelect=document.getElementById("theme-select");
+  if(themeSelect){themeSelect.value=nextTheme;}
+  updateChartTheme();
+}
+
+function loadSavedTheme(){
+  const savedTheme=localStorage.getItem(STORAGE_KEYS.theme) || "dark";
+  applyTheme(savedTheme);
+}
+
+function saveSettings(){
+  const themeSelect=document.getElementById("theme-select");
+  const status=document.getElementById("settings-status");
+  const selectedTheme=themeSelect ? themeSelect.value : "dark";
+  localStorage.setItem(STORAGE_KEYS.theme,selectedTheme);
+  applyTheme(selectedTheme);
+  if(status){
+    status.textContent="Settings saved.";
+    window.clearTimeout(saveSettings.statusTimer);
+    saveSettings.statusTimer=window.setTimeout(()=>{
+      status.textContent="";
+    },2200);
+  }
+}
+
+loadSavedTheme();
 
 function togglePassword(){
   const passInput=document.getElementById("password");
@@ -1035,6 +1143,7 @@ function closeSidebar(){
 function initChart(){
   const ctx=document.getElementById("dashboardChart");
   if(!ctx){return;}
+  const colors=getThemeColors();
   if(dashboardChart){dashboardChart.destroy();}
   dashboardChart=new Chart(ctx,{
     type:"line",
@@ -1043,13 +1152,13 @@ function initChart(){
       datasets:[{
         label:"Active Users",
         data:[10,25,15,40,30,50,45],
-        borderColor:"#63b3ff",
-        backgroundColor:"rgba(99,179,255,0.18)",
+        borderColor:colors.accent,
+        backgroundColor:colors.accentSoft,
         fill:true,
         tension:0.35,
         pointRadius:4,
         pointHoverRadius:5,
-        pointBackgroundColor:"#63b3ff"
+        pointBackgroundColor:colors.accent
       }]
     },
     options:{
@@ -1057,23 +1166,25 @@ function initChart(){
       maintainAspectRatio:false,
       plugins:{
         legend:{
-          labels:{color:"rgba(255,255,255,.82)"}
+          labels:{color:colors.text}
         }
       },
       scales:{
         x:{
-          ticks:{color:"rgba(255,255,255,.58)"},
-          grid:{color:"rgba(255,255,255,.08)"}
+          ticks:{color:colors.muted},
+          grid:{color:colors.grid}
         },
         y:{
           beginAtZero:true,
-          ticks:{color:"rgba(255,255,255,.58)"},
-          grid:{color:"rgba(255,255,255,.08)"}
+          ticks:{color:colors.muted},
+          grid:{color:colors.grid}
         }
       }
     }
   });
 }
+
+document.getElementById("save-settings-btn").addEventListener("click",saveSettings);
 </script>
 
 </body>
