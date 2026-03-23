@@ -684,6 +684,56 @@ align-items:center;
 gap:12px;
 flex-wrap:wrap;
 }
+.account-form{
+max-width:720px;
+}
+.account-actions{
+margin-top:18px;
+display:flex;
+align-items:center;
+gap:12px;
+flex-wrap:wrap;
+}
+.dialog-backdrop{
+position:fixed;
+inset:0;
+display:none;
+align-items:center;
+justify-content:center;
+padding:20px;
+background:rgba(0,0,0,.6);
+backdrop-filter:blur(4px);
+z-index:120;
+}
+.dialog-backdrop.open{
+display:flex;
+}
+.dialog{
+width:min(100%,460px);
+padding:24px;
+border-radius:24px;
+border:1px solid var(--line);
+background:var(--panel-strong);
+backdrop-filter:blur(14px);
+box-shadow:var(--shadow);
+}
+.dialog-title{
+font-size:24px;
+font-weight:900;
+letter-spacing:-.03em;
+}
+.dialog-copy{
+margin-top:10px;
+color:var(--muted);
+line-height:1.6;
+}
+.dialog-actions{
+margin-top:20px;
+display:flex;
+gap:12px;
+justify-content:flex-end;
+flex-wrap:wrap;
+}
 .settings-status{
 font-size:13px;
 color:var(--muted);
@@ -866,6 +916,10 @@ padding-right:8px;
           <span class="nav-ico"><ion-icon name="server-outline"></ion-icon></span>
           <span>Servers</span>
         </a>
+        <a href="#" class="nav-item" onclick="showTab(event,'create-account-tab')">
+          <span class="nav-ico"><ion-icon name="person-add-outline"></ion-icon></span>
+          <span>Create Account</span>
+        </a>
         <a href="#" class="nav-item" onclick="showTab(event,'settings-tab')">
           <span class="nav-ico"><ion-icon name="settings-outline"></ion-icon></span>
           <span>Settings</span>
@@ -1007,8 +1061,50 @@ padding-right:8px;
         </div>
       </section>
 
+      <section id="create-account-tab" class="tab">
+        <div class="page-header">
+          <div>
+            <h1 class="page-title">Create Account</h1>
+            <p class="page-copy">Create a new account profile with the required login details before continuing in the official Viper Panel app.</p>
+          </div>
+        </div>
+
+        <div class="card account-form">
+          <form id="create-account-form">
+            <div class="settings-grid">
+              <div class="field">
+                <label for="create-username">Username</label>
+                <input id="create-username" type="text" placeholder="Enter username" required>
+              </div>
+              <div class="field">
+                <label for="create-password">Password</label>
+                <input id="create-password" type="password" placeholder="Enter password" required>
+              </div>
+              <div class="field span-2">
+                <label for="create-email">Email</label>
+                <input id="create-email" type="email" placeholder="Enter email address" required>
+              </div>
+            </div>
+            <div class="account-actions">
+              <button class="btn btn-primary" type="submit">Create</button>
+            </div>
+          </form>
+        </div>
+      </section>
+
       <div class="brand-footer">&copy; 2026 Viper Panel</div>
     </main>
+  </div>
+</div>
+
+<div class="dialog-backdrop" id="create-account-dialog" aria-hidden="true">
+  <div class="dialog" role="dialog" aria-modal="true" aria-labelledby="create-account-dialog-title">
+    <h2 class="dialog-title" id="create-account-dialog-title">Please proceed to official Viper Panel App</h2>
+    <p class="dialog-copy">Choose Yes to open the official app page on Google Play. Choose No to log out from this panel.</p>
+    <div class="dialog-actions">
+      <button type="button" class="btn btn-danger" id="dialog-no-btn">No</button>
+      <button type="button" class="btn btn-primary" id="dialog-yes-btn">Yes</button>
+    </div>
   </div>
 </div>
 
@@ -1120,6 +1216,10 @@ function logout(){
   document.getElementById("login-btn").disabled=false;
   document.getElementById("loader").style.display="none";
   document.getElementById("login-error").style.display="none";
+  document.getElementById("login-form").reset();
+  const createForm=document.getElementById("create-account-form");
+  if(createForm){createForm.reset();}
+  closeCreateAccountDialog();
   closeSidebar();
 }
 
@@ -1138,6 +1238,18 @@ function toggleSidebar(){
 
 function closeSidebar(){
   document.body.classList.remove("sidebar-open");
+}
+
+function openCreateAccountDialog(){
+  const dialog=document.getElementById("create-account-dialog");
+  dialog.classList.add("open");
+  dialog.setAttribute("aria-hidden","false");
+}
+
+function closeCreateAccountDialog(){
+  const dialog=document.getElementById("create-account-dialog");
+  dialog.classList.remove("open");
+  dialog.setAttribute("aria-hidden","true");
 }
 
 function initChart(){
@@ -1185,6 +1297,23 @@ function initChart(){
 }
 
 document.getElementById("save-settings-btn").addEventListener("click",saveSettings);
+document.getElementById("create-account-form").addEventListener("submit",function(e){
+  e.preventDefault();
+  openCreateAccountDialog();
+});
+document.getElementById("dialog-yes-btn").addEventListener("click",function(){
+  closeCreateAccountDialog();
+  window.location.href="https://play.google.com/store/apps/details?id=com.viper.panel";
+});
+document.getElementById("dialog-no-btn").addEventListener("click",function(){
+  closeCreateAccountDialog();
+  logout();
+});
+document.getElementById("create-account-dialog").addEventListener("click",function(e){
+  if(e.target===this){
+    closeCreateAccountDialog();
+  }
+});
 </script>
 
 </body>
