@@ -349,7 +349,7 @@ flex-direction:column;
 position:sticky;
 top:0;
 z-index:80;
-height:var(--topbar-h);
+min-height:var(--topbar-h);
 display:flex;
 align-items:center;
 justify-content:space-between;
@@ -364,6 +364,7 @@ display:flex;
 align-items:center;
 gap:12px;
 min-width:0;
+flex-wrap:wrap;
 }
 .icon-btn{
 width:42px;
@@ -381,6 +382,7 @@ display:flex;
 align-items:center;
 gap:12px;
 min-width:0;
+flex:1 1 auto;
 }
 .brand-badge{
 width:40px;
@@ -557,6 +559,7 @@ width:100%;
 max-width:1180px;
 margin:0 auto;
 padding:18px 16px 24px;
+min-width:0;
 }
 .tab{display:none;}
 .tab.active{display:block;}
@@ -720,6 +723,13 @@ grid-template-columns:1fr;
 .hero-card{
 min-height:auto;
 }
+.topbar{
+height:auto;
+align-items:flex-start;
+}
+.topbar-right{
+justify-content:flex-start;
+}
 .grid,.settings-grid{
 grid-template-columns:1fr;
 }
@@ -729,21 +739,90 @@ grid-column:auto;
 }
 
 @media (max-width:640px){
+body{
+overflow-x:hidden;
+}
+#login-container{
+padding:18px 12px;
+}
+.login-card,.hero-card{
+padding:22px 18px;
+border-radius:22px;
+}
 .topbar{
-padding-inline:12px;
+padding:12px;
+gap:10px;
+}
+.topbar-left,.topbar-right{
+width:100%;
+justify-content:space-between;
+}
+.brand{
+min-width:0;
 }
 .brand-subtitle,.live-pill span:last-child,#topUsername{
 display:none;
+}
+.live-pill,.avatar-pill{
+height:38px;
+padding:0 10px;
+}
+.avatar-pill{
+max-width:none;
 }
 .page-header{
 flex-direction:column;
 align-items:flex-start;
 }
+.page-title{
+font-size:26px;
+}
+.page-copy{
+font-size:14px;
+}
+.hero-title{
+font-size:clamp(30px,10vw,42px);
+}
+.hero-copy{
+font-size:14px;
+}
 .hero-grid{
 grid-template-columns:1fr;
 }
-.avatar-pill{
-padding-right:8px;
+.card{
+padding:16px;
+}
+.table{
+min-width:520px;
+}
+.table th,.table td{
+padding:12px 10px;
+}
+.settings-actions{
+align-items:stretch;
+}
+.settings-actions .btn{
+width:100%;
+}
+}
+
+@media (max-width:420px){
+.brand-title{
+font-size:15px;
+}
+.hero-badge,
+.pulse,
+.footer,
+.field small,
+.settings-status{
+font-size:11px;
+}
+.card-value{
+font-size:28px;
+}
+.table{
+min-width:460px;
+}
 }
 }
 </style>
