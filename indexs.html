@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Viper Panel - Professional Admin Dashboard</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+<script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
 <style>
 :root{
 --bg:#f5f7fb;
@@ -16,8 +18,10 @@
 --shadow:0 20px 40px rgba(0,0,0,0.08);
 --sidebar-bg:#1f2230;
 --sidebar-text:#e6e9f2;
---sidebar-hover:#6c3bff;
---sidebar-active:#9f6bff;
+--sidebar-shell:#ffffff;
+--sidebar-ink:#2a2f3a;
+--sidebar-glow:#29fd53;
+--sidebar-cutout:#0f1117;
 }
 @media (prefers-color-scheme: dark){
 :root{
@@ -30,8 +34,10 @@
 --shadow:0 20px 40px rgba(0,0,0,0.6);
 --sidebar-bg:#12151f;
 --sidebar-text:#e6e9f2;
---sidebar-hover:#8b5cff;
---sidebar-active:#a477ff;
+--sidebar-shell:#f4f7fb;
+--sidebar-ink:#20242f;
+--sidebar-glow:#29fd53;
+--sidebar-cutout:#12151f;
 }
 }
 *{box-sizing:border-box;margin:0;padding:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,sans-serif;}
@@ -63,14 +69,136 @@ button:disabled{opacity:.6;cursor:not-allowed;}
 
 /* Dashboard */
 .dashboard{display:none;flex:1;flex-direction:row;overflow:hidden;}
-.sidebar{width:220px;background:var(--sidebar-bg);display:flex;flex-direction:column;padding:20px;position:relative;transition:all .3s;}
-.sidebar.collapsed{width:60px;}
-.sidebar h3{margin-bottom:20px;font-size:18px;color:var(--sidebar-text);}
-.sidebar a{margin-bottom:12px;text-decoration:none;color:var(--sidebar-text);font-weight:500;display:flex;align-items:center;gap:10px;padding:10px;border-radius:8px;transition:.2s;}
-.sidebar a:hover{background:var(--sidebar-hover);color:white;}
-.sidebar a.active{background:var(--sidebar-active);color:white;}
-.hamburger{position:absolute;top:20px;right:-35px;width:30px;height:30px;display:flex;flex-direction:column;justify-content:space-between;cursor:pointer;}
-.hamburger span{height:4px;background:var(--accent);border-radius:2px;transition:.3s;}
+.sidebar{
+width:180px;
+background:linear-gradient(180deg,var(--sidebar-bg),#171a25);
+display:flex;
+flex-direction:column;
+align-items:center;
+justify-content:space-between;
+padding:24px 18px;
+position:relative;
+transition:transform .3s ease;
+box-shadow:24px 0 50px rgba(0,0,0,0.18);
+}
+.sidebar-top{width:100%;display:flex;flex-direction:column;align-items:center;gap:22px;}
+.sidebar-brand{text-align:center;color:var(--sidebar-text);}
+.sidebar-brand strong{display:block;font-size:20px;letter-spacing:.06em;text-transform:uppercase;}
+.sidebar-brand span{display:block;font-size:12px;opacity:.65;letter-spacing:.16em;text-transform:uppercase;margin-top:6px;}
+.hamburger{
+display:none;
+position:absolute;
+top:18px;
+right:-56px;
+width:42px;
+height:42px;
+border:none;
+border-radius:14px;
+background:var(--card);
+box-shadow:var(--shadow);
+cursor:pointer;
+padding:10px;
+}
+.hamburger span{display:block;height:3px;background:var(--accent);border-radius:999px;margin:4px 0;}
+.navigation{
+position:relative;
+width:100px;
+background:var(--sidebar-shell);
+border-radius:28px;
+padding:18px 0;
+display:flex;
+justify-content:center;
+box-shadow:0 18px 35px rgba(0,0,0,0.18);
+}
+.navigation ul{position:relative;display:flex;flex-direction:column;align-items:center;gap:10px;width:100%;}
+.navigation ul li{position:relative;list-style:none;width:70px;height:70px;z-index:1;}
+.navigation ul li a{
+position:relative;
+display:flex;
+justify-content:center;
+align-items:center;
+flex-direction:column;
+width:100%;
+height:100%;
+text-align:center;
+font-weight:500;
+text-decoration:none;
+}
+.navigation ul li a .icon{
+position:relative;
+display:block;
+line-height:75px;
+font-size:1.5em;
+text-align:center;
+transition:.5s;
+color:var(--sidebar-ink);
+}
+.navigation ul li.active a .icon{transform:translateX(30px);}
+.navigation ul li a .text{
+position:absolute;
+color:var(--sidebar-ink);
+font-weight:600;
+font-size:.72em;
+letter-spacing:.08em;
+text-transform:uppercase;
+transition:.5s;
+opacity:0;
+transform:translateX(-18px);
+}
+.navigation ul li.active a .text{opacity:1;transform:translateX(-8px);}
+.indicator{
+position:absolute;
+left:50%;
+top:18px;
+width:70px;
+height:70px;
+background:var(--sidebar-glow);
+border-radius:50%;
+border:6px solid var(--sidebar-cutout);
+transition:.5s;
+transform:translateX(-50%);
+}
+.indicator::before{
+content:'';
+position:absolute;
+left:50%;
+top:-22px;
+width:20px;
+height:20px;
+transform:translateX(-50%);
+background:transparent;
+border-bottom-left-radius:20px;
+box-shadow:-10px 1px 0 0 var(--sidebar-cutout);
+}
+.indicator::after{
+content:'';
+position:absolute;
+left:50%;
+bottom:-22px;
+width:20px;
+height:20px;
+transform:translateX(-50%);
+background:transparent;
+border-top-left-radius:20px;
+box-shadow:-10px -1px 0 0 var(--sidebar-cutout);
+}
+.navigation ul li:nth-child(1).active~.indicator{transform:translateX(-50%) translateY(calc(80px * 0));}
+.navigation ul li:nth-child(2).active~.indicator{transform:translateX(-50%) translateY(calc(80px * 1));}
+.navigation ul li:nth-child(3).active~.indicator{transform:translateX(-50%) translateY(calc(80px * 2));}
+.navigation ul li:nth-child(4).active~.indicator{transform:translateX(-50%) translateY(calc(80px * 3));}
+.sidebar-logout{
+width:100%;
+display:flex;
+justify-content:center;
+padding-top:8px;
+}
+.sidebar-logout button{
+width:auto;
+margin:0;
+padding:12px 18px;
+border-radius:14px;
+font-size:14px;
+}
 .main-content{flex:1;padding:30px;overflow:auto;transition:.3s;background:var(--bg);}
 .tab{display:none;animation:fadeIn .4s;}
 .tab.active{display:block;}
@@ -86,9 +214,17 @@ button:disabled{opacity:.6;cursor:not-allowed;}
 .card-small{background:var(--card);padding:20px;border-radius:12px;box-shadow:var(--shadow);flex:1;min-width:150px;text-align:center;}
 /* Responsive */
 @media(max-width:768px){
-.sidebar{position:absolute;left:-220px;top:0;height:100vh;z-index:1000;}
-.sidebar.show{left:0;}
-.hamburger{right:-50px;}
+.sidebar{
+position:absolute;
+left:0;
+top:0;
+height:100vh;
+z-index:1000;
+transform:translateX(-100%);
+}
+.sidebar.show{transform:translateX(0);}
+.hamburger{display:block;}
+.main-content{padding:86px 20px 24px;}
 }
 </style>
 </head>
@@ -122,13 +258,45 @@ button:disabled{opacity:.6;cursor:not-allowed;}
 
 <div class="dashboard" id="dashboard">
   <div class="sidebar" id="sidebar">
-    <div class="hamburger" onclick="toggleSidebar()"><span></span><span></span><span></span></div>
-    <h3>Viper Panel</h3>
-    <a href="#" onclick="showTab('dashboard-tab')" class="active">Dashboard</a>
-    <a href="#" onclick="showTab('users-tab')">Users</a>
-    <a href="#" onclick="showTab('servers-tab')">Servers</a>
-    <a href="#" onclick="showTab('settings-tab')">Settings</a>
-    <a href="#" onclick="logout()">Logout</a>
+    <button class="hamburger" type="button" onclick="toggleSidebar()"><span></span><span></span><span></span></button>
+    <div class="sidebar-top">
+      <div class="sidebar-brand">
+        <strong>Viper</strong>
+        <span>Control Hub</span>
+      </div>
+      <nav class="navigation" aria-label="Dashboard sections">
+        <ul id="nav-list">
+          <li class="list active">
+            <a href="#" data-tab="dashboard-tab" onclick="showTab(event,'dashboard-tab')">
+              <span class="icon"><ion-icon name="home-outline"></ion-icon></span>
+              <span class="text">Home</span>
+            </a>
+          </li>
+          <li class="list">
+            <a href="#" data-tab="users-tab" onclick="showTab(event,'users-tab')">
+              <span class="icon"><ion-icon name="people-outline"></ion-icon></span>
+              <span class="text">Users</span>
+            </a>
+          </li>
+          <li class="list">
+            <a href="#" data-tab="servers-tab" onclick="showTab(event,'servers-tab')">
+              <span class="icon"><ion-icon name="server-outline"></ion-icon></span>
+              <span class="text">Servers</span>
+            </a>
+          </li>
+          <li class="list">
+            <a href="#" data-tab="settings-tab" onclick="showTab(event,'settings-tab')">
+              <span class="icon"><ion-icon name="settings-outline"></ion-icon></span>
+              <span class="text">Settings</span>
+            </a>
+          </li>
+          <div class="indicator"></div>
+        </ul>
+      </nav>
+    </div>
+    <div class="sidebar-logout">
+      <button type="button" onclick="logout()">Logout</button>
+    </div>
   </div>
   <div class="main-content">
     <div id="dashboard-tab" class="tab active">
@@ -171,7 +339,7 @@ button:disabled{opacity:.6;cursor:not-allowed;}
   </div>
 </div>
 
-<div class="brand">© 2026 Viper Panel</div>
+<div class="brand">&copy; 2026 Viper Panel</div>
 
 <script>
 function togglePassword(){
@@ -201,16 +369,19 @@ function logout(){
   document.getElementById('loader').style.display='none';
 }
 
-function showTab(tabId){
+function showTab(event,tabId){
+  event.preventDefault();
   document.querySelectorAll('.tab').forEach(tab=>tab.classList.remove('active'));
   document.getElementById(tabId).classList.add('active');
-  document.querySelectorAll('.sidebar a').forEach(a=>a.classList.remove('active'));
-  event.target.classList.add('active');
+  document.querySelectorAll('.navigation .list').forEach(item=>item.classList.remove('active'));
+  event.currentTarget.closest('.list').classList.add('active');
+  if(window.innerWidth<768){
+    document.getElementById('sidebar').classList.remove('show');
+  }
 }
 
 function toggleSidebar(){
   const sidebar=document.getElementById('sidebar');
-  sidebar.classList.toggle('collapsed');
   if(window.innerWidth<768){sidebar.classList.toggle('show');}
 }
 
